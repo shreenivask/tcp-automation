@@ -1,0 +1,30 @@
+{% extends "user/base.html" %}
+{% block title %} Dashboard {% endblock %}
+<!-- {% block heading %} <h1 class="heading">Dashboard</h1> {% endblock %} -->
+{% block content %}
+{% include "user/clients_tab_section.html" %}
+<div class="defaultSec">
+    <div class="tables">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Ticket Number</th>
+                    <th>Test Description</th>
+                    <th>Executed by</th>
+                    <th>Report link</th>
+                </tr>
+            </thead>
+            <tbody class="">
+                {% for test in all_tests %}
+                <tr>
+                    <td>{{ test.test_ticket }}</td>
+                    <td>{{ test.test_description }}</td>
+                    <td>{{ test.test_executed_by }}</td>
+                    <td><a href="static/pdf/{{test.test_report_file }}.pdf" download><img src="{{ url_for('user_bp.static', filename='images/pdf-extesion.png') }}"></a> </td>
+                <tr>
+                    {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

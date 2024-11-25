@@ -1,0 +1,293 @@
+{% extends "user/base.html" %} {% block title %} AARP {% endblock %} {% block
+content %}
+
+<div class="defaultSec">
+  <div class="aarpCheckList">
+    <div class="header-checkList">
+      <h2>AARP Dashboard</h2>
+    </div>
+
+    <div class="client-tabs aarp_tabs">
+      <input
+        type="radio"
+        id="tabdashboard"
+        name="client-tabs"
+        checked="checked"
+      />
+      <label for="tabdashboard" class="tab-active">Overview</label>
+      <div class="tab">
+        <div class="tables">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Ticket Number</th>
+                <th>Test Description</th>
+                <th>Executed by</th>
+                <th>Report link</th>
+              </tr>
+            </thead>
+            <tbody class="">
+              {% for test in aarp_tests %}
+              <tr>
+                <td>{{ test.test_ticket }}</td>
+                <td>{{ test.test_description }}</td>
+                <td>{{ test.test_executed_by }}</td>
+                <td>
+                  <a href="static/pdf/{{test.test_report_file }}.pdf" download
+                    ><img
+                      src="{{ url_for('user_bp.static', filename='images/pdf-extesion.png') }}"
+                  /></a>
+                </td>
+              </tr>
+
+              <tr>
+                {% endfor %}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <input type="radio" id="tabTestSuite" name="client-tabs" />
+      <label for="tabTestSuite" class="tab-active">Test Suite</label>
+      <div class="tab">
+        <div class="functionality_content">
+          <div class="aarp_contents_first">
+            <a
+              href="aarp-tests/aarp-master-checklist"
+              target="_blank"
+              class="test-case-link test-case"
+              >Master Checklist</a
+            >
+          </div>
+
+          <div class="aarp_contents_second_set">
+            <a
+              href="aarp-tests/aarp-image-comparison"
+              target="_blank"
+              class="test-case-link test-case"
+              >UI comparision</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <input type="radio" id="tabsingletests" name="client-tabs" />
+      <label for="tabsingletests" class="tab-active">Test Cases</label>
+      <div class="tab">
+        <div class="functionality_content">
+          <div class="aarp_contents_first">
+            <div class="test-case-div">
+              <input
+                type="checkbox"
+                id="test-case-link1"
+                name="test-case-link"
+                value="aarp-join-page-with-parameter"
+                class="test-case-link test-case"
+              />
+              <label class="test-case-label" for="test-case-link1"
+                >Verify Join Page with parameters</label
+              >
+            </div>
+            <div class="test-case-div">
+              <input
+                type="checkbox"
+                id="test-case-link2"
+                name="test-case-link"
+                value="aarp-renew-page-with-parameter"
+                class="test-case-link test-case"
+              />
+              <label class="test-case-label" for="test-case-link2"
+                >Verify Renew Page with parameters</label
+              >
+            </div>
+            <div class="test-case-div">
+              <input
+                type="checkbox"
+                id="test-case-link3"
+                name="test-case-link"
+                value="aarp-meta-tags"
+                class="test-case-link test-case"
+              />
+              <label class="test-case-label" for="test-case-link3"
+                >Verify Meta Tags</label
+              >
+            </div>
+            <div class="test-case-div">
+              <input
+                type="checkbox"
+                id="test-case-link4"
+                name="test-case-link"
+                value="aarp-https-link-verification"
+                class="test-case-link test-case"
+              />
+              <label class="test-case-label" for="test-case-link4"
+                >Verify Https Links</label
+              >
+            </div>
+            <div class="test-case-div">
+              <input
+                type="checkbox"
+                id="test-case-link5"
+                name="test-case-link"
+                value="aarp-meta-tags-index-follow"
+                class="test-case-link test-case"
+              />
+              <label class="test-case-label" for="test-case-link5"
+                >Verify Page Meta Tags Index Follow</label
+              >
+            </div>
+            <div class="test-case-div">
+              <input
+                type="checkbox"
+                id="test-case-link6"
+                name="test-case-link"
+                value="aarp-smetric-in-network"
+                class="test-case-link test-case"
+              />
+              <label class="test-case-label" for="test-case-link6"
+                >Verify v60 and v197 in Smetric Network</label
+              >
+            </div>
+            <div class="test-case-div">
+              <input
+                type="checkbox"
+                id="test-case-link7"
+                name="test-case-link"
+                value="aarp-verify-class-name"
+                class="test-case-link test-case"
+              />
+              <label class="test-case-label" for="test-case-link7"
+                >Verify Class Names</label
+              >
+            </div>
+            <div class="test-case-div">
+              <input
+                type="checkbox"
+                id="test-case-link8"
+                name="test-case-link"
+                value="aarp-cta-qs-button"
+                class="test-case-link test-case"
+              />
+              <label class="test-case-label" for="test-case-link8"
+                >Verify CTA query string</label
+              >
+            </div>
+          </div>
+          <div class="aarp_contents_second_set">
+            <div class="test-case-div">
+              <input
+                type="checkbox"
+                id="test-case-link9"
+                name="test-case-link"
+                value="aarp-verify-console-error"
+                class="test-case-link test-case"
+              />
+              <label class="test-case-label" for="test-case-link9"
+                >Verify Console Error</label
+              >
+            </div>
+            <div class="test-case-div">
+              <input
+                type="checkbox"
+                id="test-case-link10"
+                name="test-case-link"
+                value="aarp-verify-correct-premium-name"
+                class="test-case-link test-case"
+              />
+              <label class="test-case-label" for="test-case-link10"
+                >Verify Correct Premium Name</label
+              >
+            </div>
+            <div class="test-case-div">
+              <input
+                type="checkbox"
+                id="test-case-link11"
+                name="test-case-link"
+                value="aarp-cta-click"
+                class="test-case-link test-case"
+              />
+              <label class="test-case-label" for="test-case-link11"
+                >Verify CTA Click Functionality</label
+              >
+            </div>
+            <div class="test-case-div">
+              <input
+                type="checkbox"
+                id="test-case-link12"
+                name="test-case-link"
+                value="aarp-different-browser-widths"
+                class="test-case-link test-case"
+              />
+              <label class="test-case-label" for="test-case-link12"
+                >Verify Page in Different Browser Widths</label
+              >
+            </div>
+            <div class="test-case-div">
+              <input
+                type="checkbox"
+                id="test-case-link13"
+                name="test-case-link"
+                value="aarp-different-widths-with-scroll"
+                class="test-case-link test-case"
+              />
+              <label class="test-case-label" for="test-case-link13"
+                >Verify Page by Scrolling</label
+              >
+            </div>
+            <div class="test-case-div">
+              <input
+                type="checkbox"
+                id="test-case-link14"
+                name="test-case-link"
+                value="aarp-lg-copy-text-verification"
+                class="test-case-link test-case"
+              />
+              <label class="test-case-label" for="test-case-link14"
+                >Verify Header phone number</label
+              >
+            </div>
+            <div class="test-case-div">
+              <input
+                type="checkbox"
+                id="test-case-link15"
+                name="test-case-link"
+                value="aarp-category-level-accord"
+                class="test-case-link test-case"
+              />
+              <label class="test-case-label" for="test-case-link15"
+                >Verify Category query string</label
+              >
+            </div>
+            <div class="test-case-div">
+              <input
+                type="checkbox"
+                id="test-case-link16"
+                name="test-case-link"
+                value="aarp-join-renew-with-parameter-py"
+                class="test-case-link test-case"
+              />
+              <label class="test-case-label" for="test-case-link16"
+                >Verify PYP Functionality</label
+              >
+            </div>
+          </div>
+        </div>
+        <form  id="test-selection-Form" action="/user/aarp-tests/run-test" method="get">
+          <input type="hidden" name="test_names" id="test_names" value="" />
+          <button
+            type="submit"
+            id="submit-selected-tests"
+            style="display: none"
+          >
+            Execute selected test cases
+          </button>
+        </form>
+        <p class="report-error-msg" id="test_names_empty_error"></p>
+        <button onclick="handleSelectedTestcases()" class="btn-primary">Execute selected test cases</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

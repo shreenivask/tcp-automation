@@ -1,0 +1,20 @@
+/* css for report  HTML*/
+.results-table-row span.expander::after {
+    content: " (hide details)";
+  }
+  .results-table-row tr.collapsed {
+    display: contents;
+  }
+  
+  .results-table-row .log {
+    height: auto;
+  }
+  .results-table-row .log::-webkit-scrollbar {
+    display: none; /* Hide scrollbar */
+  }
+  /* Optional: Add a smoother scrolling experience */
+  .results-table-row .log {
+    -ms-overflow-style: -ms-autohiding-scrollbar; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  /* css for report */
