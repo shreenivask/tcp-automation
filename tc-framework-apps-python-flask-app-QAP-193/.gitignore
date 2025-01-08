@@ -1,0 +1,8 @@
+__pycache__
+flask_session
+user/Reports/
+user/Reports/html
+user/static/pdf
+user/static/reports
+user/static/reports/html
+user/static/reports/html/screenshot
