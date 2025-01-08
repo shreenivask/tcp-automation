@@ -4,6 +4,7 @@ from admin.routes import admin_bp
 from flask_session import Session
 from config import Config
 from models import db
+import os
  
 app = Flask(__name__)
 app.config.from_object(Config)
