@@ -820,4 +820,6 @@ class TestCreationFunctions:
             "message": "Test Suite Created Successfully",
             }
         except Exception as e:
-            return {"message": "There is an exception while saving the Test Suite. Reason:"+ str(e)}
+            return {"message": "There is an exception while saving the Test Suite. Please check if the test case combination already exists.",
+                    "Reason": str(e)
+                    }

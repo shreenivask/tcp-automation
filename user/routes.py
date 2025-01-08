@@ -91,25 +91,16 @@ def get_dashboard():
 
 @user_bp.route("/aarp-tests/<page_path>", methods=["GET", "POST"])
 def display_run_aarp_tests(page_path):
-    print("Page Path: " + page_path)
-    print("Req Method: " + request.method)
+    # print("Page Path: " + page_path)
+    # print("Req Method: " + request.method)
     test_names = request.form.get('test_names')
-    print("Reqest test names: ")
-    print(test_names)
+    # print("Reqest test names: ")
+    # print(test_names)
     
     if request.method.upper() == "GET":
-        
         test_case_ids = request.args.get('test_case_ids')
-        print("Reqest test case ids in get: ")
-        print(test_case_ids)
-        
         test_suite_id = request.args.get('test_suite_id')
-        print("Reqest test suite ids in get: ")
-        print(test_suite_id)
-        
         test_data = TestCommonFunctions.getSelectedTestdata(test_case_ids, test_suite_id)
-        print("test_data :")
-        print(test_data)
         test_title = page_path.replace("-", " ").replace("aarp", "").strip().title()
         return display_aarp_test_view("aarp-test", page_path, test_title, test_data)
     
@@ -117,8 +108,6 @@ def display_run_aarp_tests(page_path):
         if page_path.endswith("-file"):
             test_file = "test_" + page_path.replace("-file", "")
             test_file = test_file.replace("-", "_")
-            print(test_names)
-            print(test_file)
             return TestCommonFunctions.run_test_with_file(test_file, test_names)
         elif page_path.endswith("-url"):
             test_file = "test_" + page_path.replace("-url", "")
