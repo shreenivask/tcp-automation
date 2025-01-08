@@ -402,9 +402,7 @@ function handleNcreateTestSuite () {
     }
   });
   if (count > 0 && selectedTests !== "") {
-    console.log(selectedTests);
     selectedTests = replaceTrailingComma(selectedTests);
-    console.log(selectedTests);
     document.querySelector("#test-case-ids").value = selectedTests;
     testSuiteformData.append("test_case_ids", selectedTests);
   } else {
@@ -438,16 +436,16 @@ function handleNcreateTestSuite () {
             });
           document.getElementById("submit-loader").style.display = "none";
           
-          
-           // Get the current URL
-          var url = new URL(window.location.href);
+          if(response.data.message == "Test Suite Created Successfully"){
+            // Get the current URL
+            var url = new URL(window.location.href);
     
-          // Add or update the query string parameter
-          url.searchParams.set("testsuite", true);
+            // Add or update the query string parameter
+            url.searchParams.set("testsuite", true);
     
-          // Reload the page with the new query string
-           window.location.href = url.toString();
-
+            // Reload the page with the new query string
+            window.location.href = url.toString();
+          }
         } else {
           document.getElementById("test_names_empty_error").style.display = "block";
           document.getElementById("test_names_empty_error").innerHTML =
