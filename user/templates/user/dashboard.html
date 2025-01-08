@@ -19,7 +19,7 @@
                 <tr>
                     <td>{{ test.test_ticket }}</td>
                     <td>{{ test.test_description }}</td>
-                    <td>{{ test.test_executed_by }}</td>
+                    <td>{{ test.first_name }} {{ test.last_name }}</td>
                     <td><a href="static/pdf/{{test.test_report_file }}.pdf" download><img src="{{ url_for('user_bp.static', filename='images/pdf-extesion.png') }}"></a> </td>
                 <tr>
                     {% endfor %}

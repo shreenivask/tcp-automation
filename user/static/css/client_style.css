@@ -82,9 +82,32 @@ img.gg-icon {
 
 /* All test case links section */
 .functionality_content {
-  display: flex;
   margin: 40px 20px;
 }
+.functionality_content.testSuiteDiv {
+  display: flex;
+}
+.functionality_content.testSuiteDiv .aarp_contents_first, .functionality_content.testSuiteDiv .aarp_contents_second_set {
+  width: 40%;
+}
+
+.functionality_content.testSuiteDiv a.test-case-link {
+  width: 300px;
+}
+.testSuiteSuccess {
+  font-size: 16px;
+  line-height: 1.2;
+  margin-top: 35px;
+  color: #008000;
+  font-weight: bold;
+}
+
+.aarp_contents_first {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 
 a.test-case-link {
   background: #3e66af;
@@ -116,6 +139,7 @@ a.test-case-link:hover {
   margin-bottom: 20px;
   display: flex;
   align-items: center;
+  width: 50%;
 }
 input[type="checkbox"] {
   accent-color: #3e66af;

@@ -31,6 +31,7 @@ def perform_login(email, password):
             message = "login success"
             session['logged_in'] = True
             session['name'] = admin.first_name + " " + admin.last_name
+            session['user_id'] = admin.id
         else:
             message = "login failed"
     else:

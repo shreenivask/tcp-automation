@@ -9,7 +9,10 @@ function submitTest(postUrl) {
     var testTicketInput = document.getElementById("test_ticket").value;
     var testDescriptionInput =
       document.getElementById("test_description").value;
-    var testNamesInput = document.getElementById("test_names").value;
+    var testNamesInput = document.getElementById("test-names").value;
+    var clientIdInput = document.getElementById("client-id").value;
+    var testCaseIdInput = document.getElementById("test-case-id").value;
+    var testSuiteIdInput = document.getElementById("test-suite-id").value;
 
     if (!testTicketInput || testTicketInput == "") {
       document.getElementById("report-error").innerHTML =
@@ -30,6 +33,18 @@ function submitTest(postUrl) {
 
     if (testNamesInput && testNamesInput != "") {
       formData.append("test_names", testNamesInput);
+    }
+
+    if (clientIdInput && clientIdInput != "") {
+      formData.append("client_id", clientIdInput);
+    }
+
+    if (testCaseIdInput && testCaseIdInput != "") {
+      formData.append("test_case_id", testCaseIdInput);
+    }
+
+    if (testSuiteIdInput && testSuiteIdInput != "") {
+      formData.append("test_suite_id", testSuiteIdInput);
     }
 
     formData.append("classified_id", 2);
@@ -261,6 +276,8 @@ document.addEventListener("DOMContentLoaded", function () {
 // function for highlighting the nav bar with Active page
 let pathname = window.location.pathname;
 pathname = pathname.split("user/")[1].toLowerCase();
+const urlParams = new URLSearchParams(window.location.search); // Get query parameters
+let testSuiteQs = urlParams.get('testsuite') || "";  // Fetch the value of the 'testsuite' parameter
 
 function handleClient(client) {
   document.querySelector("." + client + "-icon").style.display = "block";
@@ -280,6 +297,12 @@ if (pathname.includes("login")) {
 
 if (pathname.includes("aarp")) {
   handleClient("aarp");
+
+  if (testSuiteQs == "true"){
+   document.getElementById("tabTestSuite").click();
+   document.querySelector(".testSuiteSuccess").style.display = "block";
+  }
+
   if (pathname.includes("aarp-image-comparison")) {
     document.querySelector("#front-page").style.display = "none";
     document.querySelector("#image-page").style.display = "block";
@@ -310,15 +333,15 @@ function handleSelectedTestcases() {
   document.querySelectorAll(".test-case-link").forEach(function (e) {
     if (e.checked) {
       count = count + 1;
-      selectedTests += e.value + ",";
+      selectedTests += e.getAttribute("rel") + ",";
     }
   });
   if (count > 0 && selectedTests !== "") {
     selectedTests = replaceTrailingComma(selectedTests);
-    document.querySelector("#test_names").value = selectedTests;
+    document.querySelector("#test_ids").value = selectedTests;
     document.querySelector("#submit-selected-tests").click();
   } else {
-    document.querySelector("#test_names_empty_error").innerHTML =
+    document.querySelector("#test_ids_empty_error").innerHTML =
       "Please select the required tests from the above list and continue.";
   }
 }
@@ -330,16 +353,121 @@ if (document.getElementById("test-selection-Form")) {
     .addEventListener("submit", function (event) {
       event.preventDefault(); // Prevent the default form submission
 
-      const testNames = document.getElementById("test_names").value; // Get the value of test_names
+      const testids = document.getElementById("test_ids").value; // Get the value of test_ids
       const actionUrl = this.action; // Get the form action URL
 
       // Construct the URL with query parameters
       const url = new URL(actionUrl, window.location.origin);
-      if (testNames) {
-        url.searchParams.append("test_names", testNames);
+      if (testids) {
+        url.searchParams.append("test_case_ids", testids);
       }
 
       // Open the URL in a new tab
       window.open(url, "_blank");
     });
+}
+
+
+function showTestSuiteDiv(){
+  document.querySelector(".test_suite_form").style.display = "block";
+  document.querySelector(".btn-sec").style.display = "none";
+}
+
+function handleNcreateTestSuite () {
+  
+  var testSuiteformData = new FormData();
+
+  var testSuiteNameInput = document.getElementById("test-suite-name").value;
+  var clientIdInput = document.getElementById("client-id").value;
+
+    if (!testSuiteNameInput || testSuiteNameInput == "") {
+      document.getElementById("test_names_empty_error").innerHTML =
+        "Please enter the test suite name";
+      document.getElementById("test_names_empty_error").style.display = "block";
+      return false;
+    } else {
+      testSuiteformData.append("test_suite_name", testSuiteNameInput);
+    }
+
+    if (clientIdInput && clientIdInput != "") {
+      testSuiteformData.append("client_id", clientIdInput);
+    }
+
+  let count = 0;
+  let selectedTests = "";
+  document.querySelectorAll(".test-case-link").forEach(function (e) {
+    if (e.checked) {
+      count = count + 1;
+      selectedTests += e.getAttribute("rel") + ",";
+    }
+  });
+  if (count > 0 && selectedTests !== "") {
+    console.log(selectedTests);
+    selectedTests = replaceTrailingComma(selectedTests);
+    console.log(selectedTests);
+    document.querySelector("#test-case-ids").value = selectedTests;
+    testSuiteformData.append("test_case_ids", selectedTests);
+  } else {
+    document.querySelector("#test_names_empty_error").innerHTML =
+      "Please select the required tests from the above list and continue.";
+  }
+   
+  if(count > 0 && selectedTests !== "" && testSuiteNameInput !== "" && clientIdInput != ""){
+
+    document.querySelectorAll(".btn-primary").forEach(function(e) {
+      e.style.display = "block";
+    });
+    document.getElementById("submit-loader").style.display = "block";
+
+    axios({
+      method: "post",
+      url: "/user/create-test-suite",
+      data: testSuiteformData,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+      timeout: 0,
+    })
+      .then((response) => {
+        if (response.status == 200) {
+          document.getElementById("test_names_empty_error").style.display = "block";
+          document.getElementById("test_names_empty_error").innerHTML = response.data.message;
+          document.querySelectorAll(".btn-primary").forEach(function(e) {
+              e.style.display = "block";
+            });
+          document.getElementById("submit-loader").style.display = "none";
+          
+          
+           // Get the current URL
+          var url = new URL(window.location.href);
+    
+          // Add or update the query string parameter
+          url.searchParams.set("testsuite", true);
+    
+          // Reload the page with the new query string
+           window.location.href = url.toString();
+
+        } else {
+          document.getElementById("test_names_empty_error").style.display = "block";
+          document.getElementById("test_names_empty_error").innerHTML =
+            "There is some error with the request. Please try again";
+          document.querySelectorAll(".btn-primary").forEach(function(e) {
+              e.style.display = "block";
+            });
+          document.getElementById("submit-loader").style.display = "none";
+        }
+      })
+      .catch((error) => {
+        document.getElementById("test_names_empty_error").style.display = "block";
+        document.getElementById("test_names_empty_error").innerHTML = error;
+        document.querySelectorAll(".btn-primary").forEach(function(e) {
+          e.style.display = "block";
+        });
+        document.getElementById("submit-loader").style.display = "none";
+        return false;
+      });
+  }
+
+
 }

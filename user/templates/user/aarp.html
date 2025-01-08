@@ -31,7 +31,7 @@ content %}
               <tr>
                 <td>{{ test.test_ticket }}</td>
                 <td>{{ test.test_description }}</td>
-                <td>{{ test.test_executed_by }}</td>
+                <td>{{ test.first_name }} {{ test.last_name }}</td>
                 <td>
                   <a href="static/pdf/{{test.test_report_file }}.pdf" download
                     ><img
@@ -51,14 +51,26 @@ content %}
       <input type="radio" id="tabTestSuite" name="client-tabs" />
       <label for="tabTestSuite" class="tab-active">Test Suite</label>
       <div class="tab">
-        <div class="functionality_content">
+        <p class="testSuiteSuccess" style="display: none;">New test suite is added successfully! </p>
+        <div class="functionality_content testSuiteDiv">
           <div class="aarp_contents_first">
+            {% for test_suit in test_suits %}
+            <input type="hidden" id="test-suite-id" name = "test_suite_id" value= "{{ test_suit.id }}">
             <a
+              href="aarp-tests/run-test?test_suite_id={{ test_suit.id }}"
+              target="_blank"
+              class="test-case-link test-case"
+              >{{ test_suit.test_suite_name }}</a
+            >
+            {% endfor %}
+
+            <!-- <a
               href="aarp-tests/aarp-master-checklist"
               target="_blank"
               class="test-case-link test-case"
               >Master Checklist</a
-            >
+            > -->
+            
           </div>
 
           <div class="aarp_contents_second_set">
@@ -69,6 +81,7 @@ content %}
               >UI comparision</a
             >
           </div>
+
         </div>
       </div>
 
@@ -77,7 +90,24 @@ content %}
       <div class="tab">
         <div class="functionality_content">
           <div class="aarp_contents_first">
+            
+            {% for test_case in test_cases %}
             <div class="test-case-div">
+              <input
+                type="checkbox"
+                id="test-case-{{ test_case.id }}"
+                name="test-case-link"
+                value="{{ test_case.test_case_name }}"
+                class="test-case-link test-case"
+                rel = "{{ test_case.id }}"
+              />
+              <label class="test-case-label" for="test-case-{{ test_case.id }}"
+                >{{ test_case.test_case_name }}</label
+              >
+            </div>
+            {% endfor %}
+
+            <!-- <div class="test-case-div">
               <input
                 type="checkbox"
                 id="test-case-link1"
@@ -172,9 +202,9 @@ content %}
               <label class="test-case-label" for="test-case-link8"
                 >Verify CTA query string</label
               >
-            </div>
+            </div> -->
           </div>
-          <div class="aarp_contents_second_set">
+          <!-- <div class="aarp_contents_second_set">
             <div class="test-case-div">
               <input
                 type="checkbox"
@@ -271,10 +301,10 @@ content %}
                 >Verify PYP Functionality</label
               >
             </div>
-          </div>
+          </div> -->
         </div>
         <form  id="test-selection-Form" action="/user/aarp-tests/run-test" method="get">
-          <input type="hidden" name="test_names" id="test_names" value="" />
+          <input type="hidden" name="test_ids" id="test_ids" value="" />
           <button
             type="submit"
             id="submit-selected-tests"
@@ -283,8 +313,20 @@ content %}
             Execute selected test cases
           </button>
         </form>
-        <p class="report-error-msg" id="test_names_empty_error"></p>
         <button onclick="handleSelectedTestcases()" class="btn-primary">Execute selected test cases</button>
+
+        <div class = "test_suite_form" style="display: none">
+          <div>
+            <p class="step-text">Test Suite Name:</p>
+            <input class="ticket-input" type="text" name="test_suite_name" id="test-suite-name" minlength="4" maxlength="20" required="" value="">
+          </div>
+          <input type="hidden" id="client-id" name="client_id" value="1">
+          <input type="hidden" id="test-case-ids" name="test_case_ids" value="">
+          <button onclick="handleNcreateTestSuite()" class="btn-primary">Create test suite</button>
+        </div>
+        <p class="report-error-msg" id="test_ids_empty_error"></p>
+        <img class="submit-loader" id="submit-loader" src="/user/static/images/Loader-spinning.gif" alt="Please wait..">
+        <button onclick="showTestSuiteDiv()" class="btn-sec">Create new test suite</button>
       </div>
     </div>
   </div>

@@ -15,8 +15,9 @@ from email.utils import formataddr
 from PIL import Image
 from pyhtml2pdf import converter as pdf_convertor
 from models import db
-from user.models.test import Test
-
+from user.models.testExecution import TestExecution
+from user.models.testSuite import TestSuite
+from user.models.testCase import TestCase
 
 class TestCommonFunctions:
     Button_Click_Header_Join = (By.XPATH, '//*[@id="head_jn"]')
@@ -247,7 +248,6 @@ class TestCommonFunctions:
             else:
                 folder = os.path.dirname(chrome_path)
                 chromedriver_path = os.path.join(folder, "chromedriver.exe")
-
             service = ChromeService(chromedriver_path)
             options = webdriver.ChromeOptions()
 
@@ -306,7 +306,7 @@ class TestCommonFunctions:
                             print("Phone number is not clickable")
                             subject = "ALERT! Test Case Phone number is not clickable"
                             body = (
-                                headertext
+                                headertext  
                                 + " - Phone number is not clickable for the URL "
                                 + url
                             )
@@ -618,6 +618,9 @@ class TestCommonFunctions:
         file="None",
         test_ticket=None,
         test_description=None,
+        test_case_id=None,
+        test_suite_id=None,
+        client_id=None,
         test_names=None,
     ):
         if file != "None":
@@ -625,13 +628,14 @@ class TestCommonFunctions:
         report_file_name = self.run_test(
             single_url, test_file_name, test_ticket, test_names
         )
-        self.generate_pdf_report(report_file_name)
+        self.generate_pdf_report(report_file_name)        
         print("Deleting previous test reports")
         self.delete_report_htmls()
         self.delete_report_screenshots()
         response = self.get_response(report_file_name)
-        user_name = session.get("name")
-        self.save_test_in_db(test_ticket, test_description, user_name, report_file_name)
+        # user_name = session.get("name")
+        user_id = session.get("user_id")
+        self.save_test_in_db(test_ticket, test_description, user_id, client_id, test_case_id, test_suite_id, report_file_name)
         return response
 
     def get_image_response(self):
@@ -680,8 +684,12 @@ class TestCommonFunctions:
             self.run_image_comparison(single_url)
             test_ticket = request.form.get("test_ticket")
             test_description = request.form.get("test_description")
-            user_name = session.get("name")
-            self.save_test_in_db(test_ticket, test_description, user_name, test_ticket)
+            test_case_id = request.form.get("test_case_id")
+            test_suite_id = request.form.get("test_suite_id")
+            client_id = request.form.get("client_id")
+            user_id = session.get("user_id")
+            
+            self.save_test_in_db(test_ticket, test_description, user_id, client_id, test_case_id, test_suite_id)
             time.sleep(2)
             response = self.get_image_response()
             print(" ===== End of run_image_compare ===== ")
@@ -693,14 +701,18 @@ class TestCommonFunctions:
             return error_message
 
     def save_test_in_db(
-        self, test_ticket, test_description, user_name, report_file_name
+        self, test_ticket, test_description, user_id, client_id, test_case_id, test_suite_id, report_file_name
     ):
         try:
-            new_test = Test(
+            new_test = TestExecution(
                 test_ticket=test_ticket,
                 test_description=test_description,
-                test_executed_by=user_name,
+                user_id=user_id,
+                client_id=client_id,
+                test_case_id= test_case_id,
+                test_suite_id= test_suite_id,
                 test_report_file=report_file_name,
+                
             )
             db.session.add(new_test)
             db.session.commit()
@@ -716,8 +728,11 @@ class TestCommonFunctions:
             return "No selected file", 400
         test_ticket = request.form.get("test_ticket")
         test_description = request.form.get("test_description")
+        test_case_id = request.form.get("test_case_id")
+        test_suite_id = request.form.get("test_suite_id")
+        client_id = request.form.get("client_id")
         response = self.run_test_create_report(
-            test_name, None, file, test_ticket, test_description, test_names
+            test_name, None, file, test_ticket, test_description, test_case_id, test_suite_id, client_id, test_names
         )
         return response
 
@@ -726,7 +741,83 @@ class TestCommonFunctions:
         single_url = request.form.get("singleurl")
         test_ticket = request.form.get("test_ticket")
         test_description = request.form.get("test_description")
+        test_case_id = request.form.get("test_case_id")
+        test_suite_id = request.form.get("test_suite_id")
+        client_id = request.form.get("client_id")
         response = self.run_test_create_report(
-            test_name, single_url, "None", test_ticket, test_description, test_names
+            test_name, single_url, "None", test_ticket, test_description, test_case_id, test_suite_id, client_id, test_names
         )
         return response
+    
+ 
+    def getSelectedTestdata(test_case_ids=None, test_suite_id=None):
+        self = TestCommonFunctions()
+        try:
+            # Step 1: Fetch test_case_ids based on the provided parameters
+            if test_suite_id:
+                # If test_suite_id is provided, fetch the test_case_ids from the TestSuite
+                test_suite = TestSuite.query.get(test_suite_id)
+                if not test_suite:
+                    return {"message": "Test Suite not found."}
+
+                test_case_ids = test_suite.test_case_ids  # This is a JSON field
+
+                if not test_case_ids:
+                    return {"message": "No test cases associated with this Test Suite."}
+            
+            if not test_case_ids:
+                return {"message": "No test_case_ids provided."}
+            
+            if isinstance(test_case_ids, str):
+                # If test_case_ids is a string like '1,3', split it into a list of integers
+                test_case_ids = [int(id.strip()) for id in test_case_ids.split(',')]
+            
+            # Step 2: Fetch the test_case_name and test_function from TestCase for each test_case_id
+            test_cases = TestCase.query.filter(TestCase.id.in_(test_case_ids)).all()
+
+            if not test_cases:
+                return jsonify({"message": "No matching test cases found."}), 404
+
+            # Step 3: Prepare the response data
+            test_case_names = []
+            test_functions = ""
+
+            for test_case in test_cases:
+                test_case_names.append(test_case.test_case_name)
+
+                # Append the test function to test_functions with a comma, but avoid a leading comma for the first value
+                if test_functions:
+                    test_functions += "," + test_case.test_function
+                else:
+                    test_functions += test_case.test_function
+
+            # Step 4: Return both arrays in a collective result
+            result = {
+            'test_case_names': test_case_names,
+            'test_functions': test_functions  # test_functions is now a comma-separated string
+            }
+
+            return result
+
+        except Exception as e:
+            # Handle exceptions and return the error message
+            return {"message": "There is an exception while fetching the Test data. Reason:"+ str(e)}
+
+        
+
+class TestCreationFunctions: 
+    def create_new_test_suite(test_suite_name, client_id, test_case_ids):
+        self = TestCreationFunctions()
+        try:
+            new_test_suite = TestSuite(
+                test_suite_name=test_suite_name,
+                client_id=client_id,
+                test_case_ids= test_case_ids,
+            )
+            db.session.add(new_test_suite)
+            db.session.commit()
+            return {
+            "message": "Test Suite Created Successfully",
+            }
+        except Exception as e:
+            return {"message": "There is an exception while saving the Test Suite. Reason:"+ str(e)}

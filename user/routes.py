@@ -12,6 +12,7 @@ from user.views.user_view import (
     user_greeting_genie_tests_view,
 )
 from user.tests.common_functions import TestCommonFunctions
+from user.tests.common_functions import TestCreationFunctions
 
 user_bp = Blueprint(
     "user_bp", __name__, template_folder="templates", static_folder="static"
@@ -95,17 +96,48 @@ def display_run_aarp_tests(page_path):
     test_names = request.form.get('test_names')
     print("Reqest test names: ")
     print(test_names)
+    
     if request.method.upper() == "GET":
-        test_names = request.args.get('test_names')
-        print(test_names)
+        
+        test_case_ids = request.args.get('test_case_ids')
+        print("Reqest test case ids in get: ")
+        print(test_case_ids)
+        
+        test_suite_id = request.args.get('test_suite_id')
+        print("Reqest test suite ids in get: ")
+        print(test_suite_id)
+        
+        test_data = TestCommonFunctions.getSelectedTestdata(test_case_ids, test_suite_id)
+        print("test_data :")
+        print(test_data)
         test_title = page_path.replace("-", " ").replace("aarp", "").strip().title()
-        return display_aarp_test_view("aarp-test", page_path, test_title, test_names)
+        return display_aarp_test_view("aarp-test", page_path, test_title, test_data)
+    
     elif request.method.upper() == "POST":
         if page_path.endswith("-file"):
             test_file = "test_" + page_path.replace("-file", "")
             test_file = test_file.replace("-", "_")
+            print(test_names)
+            print(test_file)
             return TestCommonFunctions.run_test_with_file(test_file, test_names)
         elif page_path.endswith("-url"):
             test_file = "test_" + page_path.replace("-url", "")
             test_file = test_file.replace("-", "_")
             return TestCommonFunctions.run_test_with_url(test_file, test_names)
+
+
+@user_bp.route("/create-test-suite", methods=["POST"])
+
+def create_test_suite():
+    test_suite_name = request.form.get('test_suite_name')
+    client_id = request.form.get('client_id')
+    test_case_ids = request.form.get('test_case_ids')
+    test_case_ids = request.form.get('test_case_ids')
+
+    # Convert the string to a list (array) by splitting by comma
+    test_case_ids_list = test_case_ids.split(',')
+
+    # Convert the values to integers as the IDs are numeric
+    test_case_ids_list = [int(id) for id in test_case_ids_list]
+    
+    return TestCreationFunctions.create_new_test_suite(test_suite_name, client_id, test_case_ids_list)
