@@ -21,6 +21,15 @@ def get_all_tests():
     
     return all_tests
 
+def get_tests_for_dashboard():
+    all_tests_dashboard = (TestExecution.query
+                  .join(User, User.id == TestExecution.user_id)  # Join with User table based on user_id
+                  .order_by(TestExecution.id.desc())
+                  .limit(500)
+                  .with_entities(TestExecution.id, TestExecution.test_ticket, TestExecution.test_description, User.first_name, User.last_name)  # Select desired columns
+                  .all())
+    return all_tests_dashboard
+
 # def get_aarp_tests():
 #     aarp_tests = Test.query.filter(Test.test_ticket.like('AARP%')).order_by(Test.id.desc()).limit(10)
 #     return aarp_tests

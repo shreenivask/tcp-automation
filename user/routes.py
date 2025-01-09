@@ -10,6 +10,8 @@ from user.views.user_view import (
     user_jaya_tests_view,
     user_rif_tests_view,
     user_greeting_genie_tests_view,
+    user_reports_view,
+    user_charts_view
 )
 from user.tests.common_functions import TestCommonFunctions
 from user.tests.common_functions import TestCreationFunctions
@@ -78,6 +80,13 @@ def jaya_tests():
 def greeting_genie_tests():
     return user_greeting_genie_tests_view()
 
+@user_bp.route("/reports")
+def reports():
+    return user_reports_view()
+
+@user_bp.route("/charts")
+def charts():
+    return user_charts_view()
 
 @user_bp.route("/test-image-compare", methods=["POST"])
 def upload_image():
