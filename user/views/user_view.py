@@ -83,7 +83,19 @@ def user_greeting_genie_tests_view():
     else:
         return redirect(url_for("user_bp.login"))
 
-
+def user_reports_view():
+    if session.get("logged_in") is not None:
+        all_tests_dashboard = test_controller.get_tests_for_dashboard()
+        return render_template("user/reports.html", all_tests_dashboard=all_tests_dashboard)
+    else:
+        return redirect(url_for("user_bp.login"))
+    
+def user_charts_view():
+    if session.get("logged_in") is not None:
+        return render_template("user/charts.html")
+    else:
+        return redirect(url_for("user_bp.login"))
+        
 def display_aarp_test_view(template, test_name, test_title, test_data):
     if session.get("logged_in") is not None:
         return render_template(

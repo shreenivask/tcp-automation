@@ -43,13 +43,13 @@
         </li>
         <hr>
         <li class="sidebar-nav-itm">
-            <a href="javascript:void(0)">
+            <a href="{{ url_for('user_bp.charts') }}">
                 <img class="sidebar-nav-itm-icon" src="{{ url_for('user_bp.static', filename='images/chart.png') }}" alt="Charts Icon">
                 Charts
             </a>
         </li>
         <li class="sidebar-nav-itm">
-            <a href="javascript:void(0)">
+            <a href="{{ url_for('user_bp.reports') }}">
                 <img class="sidebar-nav-itm-icon" src="{{ url_for('user_bp.static', filename='images/report.png') }}" alt="Tables Icon">
                 Reports
             </a>
