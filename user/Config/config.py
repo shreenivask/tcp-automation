@@ -24,5 +24,5 @@ class Global_Env_Data:
     EMAIL_SENDER_NAME = 'QA Automation'
     EMAIL_SENDER = 'tctools@targetclose.com'
     EMAIL_PASSWORD = 'TCTOOLS???'
-    EMAIL_RECEIVER = 'basavaraj@targetclose.com'
+    EMAIL_RECEIVER = 'tctools@targetclose.com'
     LINUX_CHROME_DRIVER_PATH = '/usr/local/bin/chromedriver'
