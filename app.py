@@ -25,10 +25,10 @@ def home():
     return redirect(url_for('user_bp.login'))
 
 
-@app.before_request
-def enforce_https():
-    if not request.is_secure:
-        return redirect(request.url.replace('http://', 'https://'), code=301)
+# @app.before_request
+# def enforce_https():
+#     if not request.is_secure:
+#         return redirect(request.url.replace('http://', 'https://'), code=301)
      
 
 if __name__ == "__main__":
