@@ -244,7 +244,7 @@ class TestCommonFunctions:
             chrome_path = ChromeDriverManager().install()
             ops = platform.system()
             if ops is not None and ops.lower() == "linux":
-                chromedriver_path = Global_Env_Data.CHROME_DRIVER_PATH_LINUX
+                chromedriver_path = Global_Env_Data.LINUX_CHROME_DRIVER_PATH
             else:
                 folder = os.path.dirname(chrome_path)
                 chromedriver_path = os.path.join(folder, "chromedriver.exe")
@@ -487,7 +487,7 @@ class TestCommonFunctions:
         chrome_path = ChromeDriverManager().install()
         ops = platform.system()
         if ops is not None and ops.lower() == "linux":
-            chromedriver_path = Global_Env_Data.CHROME_DRIVER_PATH_LINUX
+            chromedriver_path = Global_Env_Data.LINUX_CHROME_DRIVER_PATH
         else:
             folder = os.path.dirname(chrome_path)
             chromedriver_path = os.path.join(folder, "chromedriver.exe")
