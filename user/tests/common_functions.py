@@ -589,8 +589,14 @@ class TestCommonFunctions:
 
     def run_test(self, single_url, test_file_name, test_ticket, test_names):
         report_file_name = self.get_report_file_name()
+        print("report_file_name")
+        print(report_file_name)
         ops = self.get_operating_system()
+        print("ops")
+        print(ops)
         test_url = str(single_url)
+        print("test_url")
+        print(test_url)
         report_file_name = test_ticket + "_" + report_file_name
         if ops is not None and ops.lower() == "linux":
             pytest_cmd = "python3 -m pytest"
@@ -608,6 +614,8 @@ class TestCommonFunctions:
             + report_file_name
             + ".html --css=user/static/css/client_style.css"
         )
+        print("command")
+        print(command)
         os.system(command)
         return report_file_name
 
