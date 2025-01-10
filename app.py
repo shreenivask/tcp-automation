@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for
+from flask import Flask, request, redirect, url_for
 from user.routes import user_bp
 from admin.routes import admin_bp
 from flask_session import Session
