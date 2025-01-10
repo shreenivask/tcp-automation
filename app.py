@@ -19,6 +19,11 @@ Session(app)
 app.register_blueprint(user_bp, url_prefix="/user")
 app.register_blueprint(admin_bp, url_prefix="/admin")
 
+@app.before_request
+def enforce_https():
+    if not request.is_secure:
+        return redirect(request.url.replace('http://', 'https://'), code=301)
+
 @app.route("/")
 def home():
     return redirect(url_for('user_bp.login'))
