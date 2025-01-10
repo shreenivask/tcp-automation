@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 db.init_app(app)
-
+app.config['PREFERRED_URL_SCHEME'] = 'https'
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SESSION_PERMANENT"] = False
 app.config.from_object(__name__)
