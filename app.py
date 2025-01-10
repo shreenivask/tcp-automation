@@ -19,14 +19,17 @@ Session(app)
 app.register_blueprint(user_bp, url_prefix="/user")
 app.register_blueprint(admin_bp, url_prefix="/admin")
 
-@app.before_request
-def enforce_https():
-    if not request.is_secure:
-        return redirect(request.url.replace('http://', 'https://'), code=301)
 
 @app.route("/")
 def home():
     return redirect(url_for('user_bp.login'))
+
+
+@app.before_request
+def enforce_https():
+    if not request.is_secure:
+        return redirect(request.url.replace('http://', 'https://'), code=301)
+     
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))  # Default to 5000 if PORT is not set
