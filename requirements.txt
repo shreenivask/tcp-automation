@@ -9,5 +9,3 @@ numpy==2.1.2
 img2pdf==0.5.1
 pyhtml2pdf==0.0.7
 webdriver-manager==4.0.2
-psycopg2-binary==2.9.3
-chromedriver-py==131.0.6778.264
